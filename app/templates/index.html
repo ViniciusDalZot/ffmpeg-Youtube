@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Streaming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 90%;
+            width: 800px; /* Ajuste a largura conforme necessário */
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(60% - 10px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: 16px;
+	    margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+	.camera-card {
+    	background-color: #f9f9f9;
+    	border-radius: 5px;
+   	 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   	 margin: 10px; /* Margem em todos os lados */
+   	 padding: 15px;
+   	 text-align: left;
+   	 flex-basis: calc(33% - 20px); /* 50% da largura - 2x a margem (10px) */
+ 	   box-sizing: border-box; /* Incluir padding e border no cálculo da largura */
+}
+        .camera-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            list-style-type: none; /* Remover marcadores de lista */
+            padding: 0; /* Remover o preenchimento padrão */
+        }
+        .camera-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            text-align: left;
+            width: calc(33% - 20px); /* Cada card deve ocupar 50% da largura */
+        }
+        .camera-card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .camera-card button {
+            background-color: #e60000;
+        }
+        #camera-card-start {
+            background-color: #00804a;
+        }
+        .camera-card button:hover {
+            background-color: #3d0000;
+        }
+        .logs-link {
+            color: #007bff;
+            text-decoration: solid;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .addcamera-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        /* Estilo adicional para tornar o formulário responsivo */
+        @media (max-width: 500px) {
+            .container {
+                width: 90%; /* Reduzir a largura máxima em telas menores */
+            }
+            .camera-card {
+                width: calc(100% - 20px); /* Cada card deve ocupar 100% da largura em telas menores */
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="addcamera-link" href="{{ url_for('add_camera_page') }}">Adicionar Câmera</a>
+        <h1>Câmeras Ativas</h1>        
+        <div class="camera-cards">
+
+            {% for camera in cameras %}
+                <div class="camera-card">
+                    <h2>{{ camera.name }}</h2>
+                    <p>IP da Câmera: {{ camera.ip }}</p>
+                    <p>Ping: {{ camera.ping }}</p>
+                    <form action="{{ url_for('start_stream', nomecamera=camera.name) }}" method="post">
+                        <button id="camera-card-start" type="submit">Iniciar Stream</button>
+                    </form>
+                    <form action="{{ url_for('stop_stream', nomecamera=camera.name) }}" method="post">
+                        <button type="submit">Encerrar Stream</button>
+                    </form>
+                    <a class="logs-link" href="{{ url_for('view_logs', nomecamera=camera.name) }}">Ver Logs</a>
+                    <a class="logs-link"href="{{ url_for('edit_camera', camera_name=camera.name) }}">Editar</a>
+                
+                </div>
+            {% endfor %}
+        </div>
+           
+    
+        <h1>Streams ao Vivo</h1>
+        <div> 
+            <iframe width="400" height="200" src="https://www.youtube.com/embed/d_YGy_dRN4g?autoplay=1" title="Jardim Umuarama - Acompanhe Sinop - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <!-- Seu código para mostrar streams ao vivo -->
+     <!-- Fechar a tag div.container -->
+     <iframe width="400" height="200" src="https://www.youtube.com/embed/xq-M928zp5M?autoplay=1" title="Jardim das Acacias - Acompanhe Sinop - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+     <iframe width="400" height="200" src="https://www.youtube.com/embed/XsStrEeDaGE?autoplay=1" title="Av Itaubas - Cameras Ao Vivo por Sinop - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+     <iframe width="400" height="200" src="https://www.youtube.com/embed/fcKtZr_tG_Q?autoplay=1" title="Esquina Av. André Maggi - Cameras Ao Vivo por Sinop - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+     <iframe width="400" height="200" src="https://www.youtube.com/embed/uoFuHa_2GmY?autoplay=1" title="Centro -Acompanhe Sinop - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+     <iframe width="400" height="200" src="https://www.youtube.com/embed/l3PPIJYioHY?autoplay=1" title="União do Sul - Acompanhe Ao Vivo - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+     <iframe width="400" height="200" src="https://www.youtube.com/embed/vH5rUv7hcA0?autoplay=1" title="Claudia - Acompanhe Ao Vivo - TwSpeed Telecom" frameborder="0" allow="accelerometer; autoplay=1; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+</body>
+</html>
+

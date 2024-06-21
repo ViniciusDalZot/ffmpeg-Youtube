@@ -1,0 +1,61 @@
+view_logs.html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs da Câmera</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .log-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 90%;
+            width: 800px;
+            height: 80vh;
+            overflow-y: scroll;
+        }
+        .log-line {
+            font-family: monospace;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <div class="log-container" id="logContainer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var socket = io();
+
+            socket.on('connect', function() {
+                console.log('Connected to server');
+                const urlParams = new URLSearchParams(window.location.search);
+                const nomecamera = urlParams.get('nomecamera');
+                socket.emit('start_log', { nomecamera: nomecamera });
+            });
+
+            socket.on('log_update', function(data) {
+                var logContainer = document.getElementById('logContainer');
+                var newLine = document.createElement('div');
+                newLine.classList.add('log-line');
+                newLine.textContent = data.log;
+                logContainer.appendChild(newLine);
+                logContainer.scrollTop = logContainer.scrollHeight; // Auto-scroll
+            });
+        });
+    </script>
+</body>
+</html>
